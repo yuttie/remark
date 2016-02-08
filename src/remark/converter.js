@@ -76,7 +76,9 @@ function convertAsciiDoc (content, links, insideContentClass) {
     }
   }
 
-  var options = opal.hash({});
+  var options = opal.hash({
+      attributes: ['showtitle']
+  });
   html = processor.$convert(asciidoc, options);
 
   if (insideContentClass) {
