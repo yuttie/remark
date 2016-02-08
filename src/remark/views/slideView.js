@@ -71,7 +71,7 @@ SlideView.prototype.configureElements = function () {
   self.element.className = 'remark-slide';
 
   self.contentElement = createContentElement(self.events, self.slideshow, self.slide);
-  self.notesElement = createNotesElement(self.slideshow, self.slide.notes);
+  self.notesElement = createNotesElement(self.slideshow, self.slide);
 
   self.contentElement.appendChild(self.slideNumber.element);
   self.element.appendChild(self.contentElement);
@@ -136,7 +136,12 @@ function createContentElement (events, slideshow, slide) {
 
   styleContentElement(slideshow, element, slide.properties);
 
-  element.innerHTML = converter.convertMarkdown(slide.content, slideshow.getLinks());
+  if (slide.properties.markup === 'asciidoc') {
+      element.innerHTML = converter.convertAsciiDoc(slide.content, slideshow.getLinks());
+  }
+  else {
+      element.innerHTML = converter.convertMarkdown(slide.content, slideshow.getLinks());
+  }
 
   highlightCodeBlocks(element, slideshow);
 
@@ -151,12 +156,17 @@ function styleContentElement (slideshow, element, properties) {
   setBackgroundFromProperties(element, properties);
 }
 
-function createNotesElement (slideshow, notes) {
+function createNotesElement (slideshow, slide) {
   var element = document.createElement('div');
 
   element.className = 'remark-slide-notes';
 
-  element.innerHTML = converter.convertMarkdown(notes);
+  if (slide.properties.markup === 'asciidoc') {
+      element.innerHTML = converter.convertAsciiDoc(slide.notes);
+  }
+  else {
+      element.innerHTML = converter.convertMarkdown(slide.notes);
+  }
 
   highlightCodeBlocks(element, slideshow);
 

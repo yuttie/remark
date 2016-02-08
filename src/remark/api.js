@@ -24,10 +24,16 @@ Api.prototype.highlighter = highlighter;
 
 Api.prototype.convert = function (markdown) {
   var parser = new Parser()
-    , content = parser.parse(markdown || '', macros)[0].content
+    , slide = parser.parse(markdown || '', macros)[0]
+    , content = slide.content
     ;
 
-  return converter.convertMarkdown(content, {}, true);
+  if (slide.properties.markup === 'asciidoc') {
+      return converter.convertAsciiDoc(content, {}, true);
+  }
+  else {
+      return converter.convertMarkdown(content, {}, true);
+  }
 };
 
 // Creates slideshow initialized from options
